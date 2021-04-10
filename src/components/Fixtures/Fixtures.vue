@@ -131,7 +131,7 @@ export default {
       }
     },
   },
-  async created() {
+  async mounted() {
     const response = await axios.get(fixtureApi);
     const obj = response.data;
     const entries = Object.values(obj);
