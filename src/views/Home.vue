@@ -5,7 +5,7 @@
         <v-toolbar color="cyan" dark flat>
           <v-app-bar-nav-icon></v-app-bar-nav-icon>
 
-          <v-toolbar-title>Your Dashboard</v-toolbar-title>
+          <v-toolbar-title>Kirimanjaro Admin Dashboard</v-toolbar-title>
 
           <v-spacer></v-spacer>
 

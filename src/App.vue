@@ -22,3 +22,9 @@ export default {
   }),
 };
 </script>
+<style>
+* {
+  font-family: "Montserrat";
+  src: url("./assets/fonts/Montserrat-Bold.ttf");
+}
+</style>

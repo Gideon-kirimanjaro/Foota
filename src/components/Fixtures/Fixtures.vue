@@ -38,7 +38,13 @@
               v-model="timePicker"
               ampm-in-title
             ></v-time-picker></v-row
-          ><button class="add" @click="postFixtures">Add Fixture</button>
+          ><button :disabled="emptyTeams" class="add" @click="postFixtures()">
+            Add Fixture
+          </button>
+          <h5 class="add2" v-if="emptyTeams">
+            Add <br />
+            -Home Team, Away Team, Time & Date
+          </h5>
         </v-row>
       </v-container></v-container
     >
@@ -89,8 +95,23 @@ export default {
       homeScore: "",
       awayScore: "",
       fixtureTeams: [],
+      message: false,
     };
   },
+  computed: {
+    emptyTeams() {
+      return (
+        this.homeTeam === "",
+        this.awayTeam === "",
+        this.datePicker === "",
+        this.timePicker === ""
+      );
+    },
+    succesMessage() {
+      return this.message;
+    },
+  },
+
   methods: {
     async postFixtures() {
       if (
@@ -111,6 +132,7 @@ export default {
           .then((response) => {
             console.log(response.ok);
           })
+          .then(this.message === 1)
           .then(
             ([
               this.homeTeam,
@@ -126,29 +148,37 @@ export default {
             console.log(err);
           });
       } else {
-        console.log("Please enter teams");
+        console.log("Enter Teams");
       }
     },
-  },
-  async created() {
-    const response = await axios.get(fixtureApi);
-    const obj = response.data;
-    const entries = Object.values(obj);
-    const teams = [];
-    console.log("Hawa", entries);
+    async getData() {
+      const response = await axios.get(fixtureApi);
+      const obj = response.data;
+      const entries = Object.values(obj);
+      const teams = [];
+      console.log("Hawa", entries);
 
-    for (let x of entries) {
-      teams.push({
-        home: x.home,
-        away: x.away,
-        awayScore: x.awayScore,
-        homeScore: x.homeScore,
-        date: x.date,
-        time: x.time,
-      });
-    }
-    this.fixtureTeams = teams;
-    console.log("My data", entries);
+      for (let x of entries) {
+        teams.push({
+          home: x.home,
+          away: x.away,
+          awayScore: x.awayScore,
+          homeScore: x.homeScore,
+          date: x.date,
+          time: x.time,
+        });
+      }
+      this.fixtureTeams = teams;
+
+      console.log("My data", entries);
+    },
+  },
+  created() {
+    this.getData();
+  },
+  updated() {
+    this.getData();
+    this.emptyTeams();
   },
 };
 </script>
@@ -160,6 +190,22 @@ export default {
   border: 2px solid;
   padding: 5px 50px;
   margin-left: 30px;
-  margin-top: 60px;
+  margin-top: 20px;
+}
+.add2 {
+  color: rgb(236, 55, 10);
+  border-radius: 0px 4px;
+  border: 2px dotted;
+  padding: 5px 50px;
+  margin-left: 30px;
+  margin-top: 20px;
+}
+.add3 {
+  color: rgb(54, 247, 6);
+  border-radius: 0px 4px;
+  border: 2px dotted;
+  padding: 5px 50px;
+  margin-left: 30px;
+  margin-top: 20px;
 }
 </style>
