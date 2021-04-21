@@ -54,6 +54,9 @@
           <thead>
             <tr>
               <th class="text-left">
+                index
+              </th>
+              <th class="text-left">
                 Home
               </th>
               <th class="text-left">
@@ -65,14 +68,31 @@
               <th class="text-left">
                 Date
               </th>
+              <th class="text-left">
+                Delete
+              </th>
+              <th class="text-left">
+                Update
+              </th>
             </tr>
           </thead>
           <tbody>
-            <tr :key="item.id" v-for="item of fixtureTeams">
+            <tr :key="item.index" v-for="(item, index) of fixtureTeams">
+              <td>{{ index }}</td>
               <td>{{ item.home }} {{ item.homeScore }}</td>
               <td>{{ item.away }} {{ item.awayScore }}</td>
               <td>{{ item.time }}</td>
               <td>{{ item.date }}</td>
+              <td>
+                <v-btn depressed class="red">
+                  <v-icon @click="deleteData(index)">mdi-delete</v-icon>
+                </v-btn>
+              </td>
+              <td>
+                <v-btn depressed class="green"
+                  ><v-icon>mdi-update</v-icon></v-btn
+                >
+              </td>
             </tr>
           </tbody>
         </template>
@@ -82,6 +102,8 @@
 </template>
 
 <script>
+"use strict";
+import db from "@/firebase";
 import axios from "axios";
 const fixtureApi = "https://gidi-epl-default-rtdb.firebaseio.com/fixtures.json";
 export default {
@@ -158,8 +180,9 @@ export default {
       const teams = [];
       console.log("Hawa", entries);
 
-      for (let x of entries) {
+      entries.forEach((x, index) => {
         teams.push({
+          index: index,
           home: x.home,
           away: x.away,
           awayScore: x.awayScore,
@@ -167,10 +190,11 @@ export default {
           date: x.date,
           time: x.time,
         });
-      }
+      });
       this.fixtureTeams = teams;
-
-      console.log("My data", entries);
+    },
+    deleteData(key) {
+      db.child(key).remove();
     },
   },
   created() {
@@ -178,7 +202,6 @@ export default {
   },
   updated() {
     this.getData();
-    this.emptyTeams();
   },
 };
 </script>
