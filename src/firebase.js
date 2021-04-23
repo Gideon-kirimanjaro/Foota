@@ -17,7 +17,7 @@ firebase.initializeApp(firebaseConfig);
 
 //-------------------------------What do you want form firebase?
 //const db = firebase.database().ref("fixtures");
-const db = firebase.database().ref("fixtures");
+const db = firebase.database();
 
 //-------------------------------Export the constant to use it
 export default db;

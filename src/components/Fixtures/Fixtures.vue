@@ -1,13 +1,13 @@
 <template>
   <div>
     <v-container class="mt-5  d-md-flex justify-space-around ">
-      <v-col cols="8" md="4" class="">
+      <v-col cols="5" md="4" class="">
         <v-text-field
           v-model="homeTeam"
           label="Enter Home  Team"
           required
         ></v-text-field>
-        <v-col cols="6">
+        <v-col cols="5">
           <v-text-field v-model="homeScore" label="Home team score"
             >score</v-text-field
           ></v-col
@@ -25,27 +25,36 @@
         ></v-col
       >
       <v-container class="ml-5">
-        <v-row>
-          <v-date-picker
-            v-model="datePicker"
-            color="green lighten-1"
-            header-color="primary"
-          ></v-date-picker>
+        <v-col>
+          <v-row>
+            <v-date-picker
+              class="ml-4 mt-3"
+              v-model="datePicker"
+              color="green lighten-1"
+              header-color="primary"
+            ></v-date-picker>
 
-          <v-row
-            ><v-time-picker
+            <v-time-picker
               class="ml-4 mt-3"
               v-model="timePicker"
               ampm-in-title
-            ></v-time-picker></v-row
-          ><button :disabled="emptyTeams" class="add" @click="postFixtures()">
-            Add Fixture
-          </button>
-          <h5 class="add2" v-if="emptyTeams">
-            Add <br />
-            -Home Team, Away Team, Time & Date
-          </h5>
-        </v-row>
+            ></v-time-picker
+          ></v-row>
+          <v-row
+            ><v-btn
+              :disabled="emptyTeams"
+              depressed
+              class="green white--text"
+              @click="postFixtures()"
+            >
+              Add Fixture</v-btn
+            >
+            <h5 class="add2" v-if="emptyTeams">
+              Add <br />
+              -Home Team, Away Team, Time & Date
+            </h5></v-row
+          >
+        </v-col>
       </v-container></v-container
     >
     <v-container class="d-flex   flex-column">
@@ -53,9 +62,6 @@
         <template v-slot:default>
           <thead>
             <tr>
-              <th class="text-left">
-                index
-              </th>
               <th class="text-left">
                 Home
               </th>
@@ -77,15 +83,14 @@
             </tr>
           </thead>
           <tbody>
-            <tr :key="item.index" v-for="(item, index) of fixtureTeams">
-              <td>{{ index }}</td>
+            <tr :key="item.key" v-for="item of fixtureTeams">
               <td>{{ item.home }} {{ item.homeScore }}</td>
               <td>{{ item.away }} {{ item.awayScore }}</td>
               <td>{{ item.time }}</td>
               <td>{{ item.date }}</td>
               <td>
                 <v-btn depressed class="red">
-                  <v-icon @click="deleteData(index)">mdi-delete</v-icon>
+                  <v-icon @click="deleteData(item.key)">mdi-delete</v-icon>
                 </v-btn>
               </td>
               <td>
@@ -178,11 +183,9 @@ export default {
       const obj = response.data;
       const entries = Object.values(obj);
       const teams = [];
-      console.log("Hawa", entries);
-
-      entries.forEach((x, index) => {
+      entries.forEach((x, y) => {
         teams.push({
-          index: index,
+          key: y,
           home: x.home,
           away: x.away,
           awayScore: x.awayScore,
@@ -194,7 +197,9 @@ export default {
       this.fixtureTeams = teams;
     },
     deleteData(key) {
-      db.child(key).remove();
+      db.ref("fixtures")
+        .child(key)
+        .remove();
     },
   },
   created() {
@@ -221,7 +226,6 @@ export default {
   border: 2px dotted;
   padding: 5px 50px;
   margin-left: 30px;
-  margin-top: 20px;
 }
 .add3 {
   color: rgb(54, 247, 6);
