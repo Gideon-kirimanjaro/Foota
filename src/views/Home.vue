@@ -35,6 +35,9 @@
           <v-tab-item>
             <Standings />
           </v-tab-item>
+          <v-tab-item>
+            <Stats />
+          </v-tab-item>
         </v-tabs-items>
       </v-card>
     </template>
@@ -44,18 +47,20 @@
 <script>
 import Fixtures from "../components/Fixtures/Fixtures";
 import Standings from "../components/Standings/Standings";
+import Stats from "../components/Stats/Stats";
 export default {
   name: "Home",
   data() {
     return {
       tab: null,
-      items: ["Fixtures", "Standings"],
+      items: ["Fixtures", "Standings", "Stats"],
       text: "Lorem",
     };
   },
   components: {
     Fixtures,
     Standings,
+    Stats,
   },
 };
 </script>

@@ -194,7 +194,17 @@ export default {
           time: x.time,
         });
       });
-      this.fixtureTeams = teams;
+      const finalTeams = teams
+        .map((val) => {
+          return val;
+        })
+        .slice()
+        .sort((a, b) => {
+          const a1 = a.date;
+          const b1 = b.date;
+          return new Date(b1) - new Date(a1);
+        });
+      this.fixtureTeams = finalTeams;
     },
     deleteData(key) {
       db.ref("fixtures")
